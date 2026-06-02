@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Germany — Travel Guide</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e2e8f0}
+/* Header */
+.header{padding:20px 40px;display:flex;align-items:center;gap:16px;background:#1e293b;border-bottom:1px solid #334155;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:16px;flex:1}
+.flag{font-size:52px;flex-shrink:0}
+.country-name h1{font-size:2.2rem;font-weight:700}
+.country-name p{color:#94a3b8;margin-top:4px;font-size:.95rem}
+.header-mid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;padding:0 32px;align-content:center}
+.mid-item{display:flex;flex-direction:column;gap:2px}
+.mid-label{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em}
+.mid-value{font-size:.82rem;color:#e2e8f0;font-weight:500;word-break:break-word}
+/* Carousel */
+.carousel-wrap{position:relative;padding:24px 64px;background:#0f172a}
+.carousel-viewport{overflow:hidden;border-radius:14px}
+.carousel-track{display:flex;gap:12px;transition:transform .45s ease}
+.carr-item{flex:0 0 calc(33.333% - 8px);border-radius:14px;overflow:hidden;height:300px;position:relative}
+.carr-item img{width:100%;height:100%;object-fit:cover;display:block}
+.carr-label{position:absolute;bottom:0;left:0;right:0;padding:10px 14px;background:linear-gradient(transparent,rgba(0,0,0,.78));color:#fff;font-size:.85rem;font-weight:600;letter-spacing:.02em}
+.carr-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(15,23,42,.75);border:2px solid #334155;color:#e2e8f0;font-size:20px;width:48px;height:48px;border-radius:50%;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.carr-btn:hover{background:#1e293b}
+.carr-prev{left:10px}.carr-next{right:10px}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#334155}
+.stat{background:#1e293b;padding:18px;text-align:center}
+.stat .val{font-size:1.1rem;font-weight:700;color:#60a5fa;word-break:break-word}
+.stat .lbl{font-size:.78rem;color:#94a3b8;margin-top:4px}
+/* Tabs */
+.tabs{display:flex;background:#1e293b;border-bottom:1px solid #334155;padding:0 40px}
+.tab{padding:14px 22px;cursor:pointer;color:#94a3b8;border-bottom:3px solid transparent;font-size:.9rem;transition:all .2s}
+.tab.active{color:#60a5fa;border-bottom-color:#60a5fa}
+/* Content */
+.content{padding:28px 40px}
+.panel{display:none}.panel.active{display:block}
+/* Places grid */
+.grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.card{background:#1e293b;border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-5px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+.card img{width:100%;height:130px;object-fit:cover}
+.card-no-img{width:100%;height:130px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:#334155}
+.card-body{padding:8px 10px}
+.card-body h3{font-size:.78rem;font-weight:600;margin-bottom:2px}
+.card-body p{font-size:.78rem;color:#94a3b8;line-height:1.45}
+.card-country{color:#60a5fa!important;font-size:.7rem;margin-top:2px}
+/* Food list */
+.food-list{display:flex;flex-direction:column;gap:10px}
+.food-item{display:flex;align-items:stretch;background:#1e293b;border-radius:12px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.food-item:hover{transform:translateX(5px);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.food-item img{width:140px;height:100px;object-fit:cover;flex-shrink:0}
+.food-info{padding:14px 18px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.food-info h3{font-size:.95rem;font-weight:600;color:#e2e8f0;margin-bottom:5px}
+.food-info p{font-size:.8rem;color:#94a3b8;line-height:1.5;margin:0}
+/* Map panel */
+.map-container{border-radius:14px;overflow:hidden;height:650px;border:1px solid #334155}
+.leaflet-control-attribution{font-size:.62rem!important;background:rgba(15,23,42,.85)!important;color:#94a3b8!important}
+.leaflet-control-attribution a{color:#60a5fa!important}
+.leaflet-control-layers{background:#1e293b!important;border:1px solid #334155!important;border-radius:8px!important;color:#e2e8f0!important}
+.leaflet-control-layers-selector{accent-color:#60a5fa}
+.leaflet-bar a{background:#1e293b!important;color:#e2e8f0!important;border-color:#334155!important}
+.leaflet-bar a:hover{background:#334155!important}
+/* Currency Dashboard */
+.currency-section{background:#1e293b;border-top:1px solid #334155;padding:22px 40px}
+.currency-top{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.currency-left{flex-shrink:0;min-width:180px}
+.time-btns{display:flex;gap:4px;margin-bottom:2px}
+.tbtn{background:transparent;border:1px solid #334155;color:#94a3b8;padding:3px 9px;border-radius:6px;cursor:pointer;font-size:.78rem;transition:all .2s}
+.tbtn.active,.tbtn:hover{background:#334155;color:#e2e8f0;border-color:#475569}
+.cur-chart-wrap{flex:1;min-width:240px;height:140px;position:relative}
+.cur-converter{display:flex;align-items:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid #334155;flex-wrap:wrap}
+.conv-grp{display:flex;flex-direction:column;gap:6px;flex:1;min-width:180px}
+.conv-lbl{font-size:.7rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em}
+.conv-row{display:flex;gap:6px}
+.conv-row input{flex:1;background:#243347;border:1px solid #4a5e7a;border-radius:8px;color:#ffffff;padding:9px 12px;font-size:1rem;outline:none;min-width:0}
+.conv-row input:focus{border-color:#60a5fa}
+.conv-row select{background:#243347;border:1px solid #4a5e7a;border-radius:8px;color:#94a3b8;padding:8px 10px;font-size:.82rem;outline:none;cursor:pointer;min-width:200px}
+.swap-btn{background:#334155;border:none;color:#e2e8f0;font-size:1.1rem;width:38px;height:38px;border-radius:50%;cursor:pointer;flex-shrink:0;transition:background .2s;align-self:flex-end;margin-bottom:2px}
+.swap-btn:hover{background:#475569}
+/* Weather tab */
+.weather-list{display:flex;flex-direction:column;gap:10px}
+.wc-card{display:flex;align-items:stretch;background:#1e293b;border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.wc-card:hover{transform:translateX(5px);box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.wc-left-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#172033;padding:20px 22px;min-width:110px;flex-shrink:0}
+.wc-emoji{font-size:2.6rem;line-height:1}
+.wc-temprow{display:flex;align-items:baseline;gap:2px}
+.wc-temp{font-size:1.8rem;font-weight:700;color:#e2e8f0}
+.wc-unit{font-size:.8rem;color:#64748b}
+.wc-right-panel{flex:1;padding:14px 20px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.wc-city{font-size:1.6rem;font-weight:700;color:#60a5fa;letter-spacing:.01em}
+.wc-desc{font-size:.8rem;color:#94a3b8}
+.wc-stats{font-size:.75rem;color:#64748b}
+.wc-chart-wrap{height:60px}
+.wc-forecast{display:flex;gap:2px;padding-top:8px;border-top:1px solid #334155}
+.wc-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px}
+.wc-day-name{font-size:.65rem;color:#64748b}
+.wc-day-icon{font-size:.9rem}
+.wc-day-hi{font-size:.72rem;color:#e2e8f0;font-weight:600}
+.wc-day-lo{font-size:.68rem;color:#64748b}
+/* Choices.js dark theme */
+.choices{flex:1;min-width:180px}
+.choices__inner{background:#243347!important;border:1px solid #4a5e7a!important;border-radius:8px!important;padding:5px 10px!important;min-height:38px!important}
+.choices__single{color:#ffffff!important;font-size:.82rem!important;padding:0!important;margin-bottom:0!important;line-height:24px!important}
+.choices__list--single{padding:0!important}
+.choices[data-type*=select-one]:after{border-color:#64748b transparent transparent!important}
+.choices[data-type*=select-one].is-open:after{border-color:transparent transparent #64748b!important}
+.choices__list--dropdown,.choices__list[aria-expanded]{background:#1e293b!important;border:1px solid #334155!important;border-radius:8px!important;margin-top:4px!important;z-index:99!important}
+.choices__list--dropdown .choices__item,.choices__list[aria-expanded] .choices__item{color:#94a3b8!important;font-size:.82rem!important;padding:8px 12px!important}
+.choices__list--dropdown .choices__item--selectable.is-highlighted,.choices__list[aria-expanded] .choices__item--selectable.is-highlighted{background:#334155!important;color:#e2e8f0!important}
+.choices__input{background:#0f172a!important;color:#e2e8f0!important;font-size:.82rem!important;border-bottom:1px solid #334155!important;padding:6px 12px!important;margin-bottom:4px!important;width:100%!important}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@10/public/assets/styles/choices.min.css">
+<script src="https://cdn.jsdelivr.net/npm/choices.js@10/public/assets/scripts/choices.min.js"></script>
+</head>
+<body>
+
+<div class="tabs">
+  <div class="tab active" onclick="show('places',this)">🌍 Explore the World</div>
+  <div class="tab" onclick="show('food',this)">🍽️ Food</div>
+  <div class="tab" onclick="show('weather',this)">🌤️ Weather</div>
+  <div class="tab" onclick="show('map',this)">🗺️ Map</div>
+</div>
+
+<div class="header">
+  <div class="header-left">
+    <div class="flag">🇩🇪</div>
+    <div class="country-name">
+      <h1>Germany</h1>
+      <p>Europe &nbsp;·&nbsp; Western Europe</p>
+      <p style="color:#ffffff;margin-top:8px;font-size:.9rem;line-height:1.7">Germany is a vibrant and enchanting country that seamlessly blends rich history, stunning landscapes, and modern culture, offering a unique travel experience that will leave you in awe. From the picturesque Bavarian Alps to the bustling streets of Berlin, Germany's diverse regions are waiting to be explored, each with its own distinct charm and character. The country's world-class museums, historic landmarks, and traditional festivals make it a paradise for culture lovers, while its scenic rivers, forests, and countryside provide endless opportunities for outdoor adventures. Whether you're interested in history, art, food, or nature, Germany has something to offer, making it a must-visit destination for travelers from around the world.</p>
+    </div>
+  </div>
+</div>
+
+<div class="carousel-wrap">
+  <button class="carr-btn carr-prev" onclick="carrMove(-1)">&#8592;</button>
+  <div class="carousel-viewport">
+    <div class="carousel-track" id="carTrack">
+      <div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Schloss_Neuschwanstein_2013.jpg/960px-Schloss_Neuschwanstein_2013.jpg" alt="Neuschwanstein Castle" loading="lazy">
+  <div class="carr-label">Neuschwanstein Castle</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/K%C3%B6lner_Dom_-_Westfassade_2022_ohne_Ger%C3%BCst-0968_b.jpg/960px-K%C3%B6lner_Dom_-_Westfassade_2022_ohne_Ger%C3%BCst-0968_b.jpg" alt="Cologne Cathedral" loading="lazy">
+  <div class="carr-label">Cologne Cathedral</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Berlinermauer.jpg/960px-Berlinermauer.jpg" alt="Berlin Wall" loading="lazy">
+  <div class="carr-label">Berlin Wall</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/7/75/Berlin_-_Checkpoint_Charlie_1963.jpg" alt="Checkpoint Charlie" loading="lazy">
+  <div class="carr-label">Checkpoint Charlie</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Brandenburger_Tor_abends.jpg/960px-Brandenburger_Tor_abends.jpg" alt="Brandenburg Gate" loading="lazy">
+  <div class="carr-label">Brandenburg Gate</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Berlin_Museumsinsel_Fernsehturm.jpg/960px-Berlin_Museumsinsel_Fernsehturm.jpg" alt="Museum Island" loading="lazy">
+  <div class="carr-label">Museum Island</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Berlin_reichstag_west_panorama_2.jpg/960px-Berlin_reichstag_west_panorama_2.jpg" alt="Reichstag building" loading="lazy">
+  <div class="carr-label">Reichstag building</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Heidelberg-2726936.jpg/960px-Heidelberg-2726936.jpg" alt="Heidelberg Castle" loading="lazy">
+  <div class="carr-label">Heidelberg Castle</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Hamburg_Rathausmarkt_und_Rathaus.jpg/960px-Hamburg_Rathausmarkt_und_Rathaus.jpg" alt="Hamburg City Hall" loading="lazy">
+  <div class="carr-label">Hamburg City Hall</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/141227_Berliner_Dom.jpg/960px-141227_Berliner_Dom.jpg" alt="Berlin Cathedral" loading="lazy">
+  <div class="carr-label">Berlin Cathedral</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Schloss_Sanssouci_2014.jpg/960px-Schloss_Sanssouci_2014.jpg" alt="Sanssouci" loading="lazy">
+  <div class="carr-label">Sanssouci</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Schloss_Oranienburg_-_Jan_2013.jpg/960px-Schloss_Oranienburg_-_Jan_2013.jpg" alt="Oranienburg Palace" loading="lazy">
+  <div class="carr-label">Oranienburg Palace</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Schloss_Stolzenfels_01_Koblenz_2015.jpg/960px-Schloss_Stolzenfels_01_Koblenz_2015.jpg" alt="Stolzenfels Castle" loading="lazy">
+  <div class="carr-label">Stolzenfels Castle</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Le_ch%C3%A2teau_d%27Eltz_%28Burg_Eltz%29_en_allemagne_%28cropped%29.jpg/960px-Le_ch%C3%A2teau_d%27Eltz_%28Burg_Eltz%29_en_allemagne_%28cropped%29.jpg" alt="Eltz Castle" loading="lazy">
+  <div class="carr-label">Eltz Castle</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Schloss_Lichtenstein_04-2010.jpg/960px-Schloss_Lichtenstein_04-2010.jpg" alt="Lichtenstein Castle (Württemberg)" loading="lazy">
+  <div class="carr-label">Lichtenstein Castle (Württemberg)</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Burg_Hohenzollern_10-2016.jpg/960px-Burg_Hohenzollern_10-2016.jpg" alt="Hohenzollern Castle" loading="lazy">
+  <div class="carr-label">Hohenzollern Castle</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Thuringia_Eisenach_asv2020-07_img23_Wartburg_Castle.jpg/960px-Thuringia_Eisenach_asv2020-07_img23_Wartburg_Castle.jpg" alt="Wartburg" loading="lazy">
+  <div class="carr-label">Wartburg</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Speyer_dom_11.jpg/960px-Speyer_dom_11.jpg" alt="Speyer Cathedral" loading="lazy">
+  <div class="carr-label">Speyer Cathedral</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Landappbw_526530_1820_Ulmer_M%C3%BCnster_Luftaufnahme_Ulmer_M%C3%BCnster_%28cropped%29.jpg/960px-Landappbw_526530_1820_Ulmer_M%C3%BCnster_Luftaufnahme_Ulmer_M%C3%BCnster_%28cropped%29.jpg" alt="Ulm Minster" loading="lazy">
+  <div class="carr-label">Ulm Minster</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Aachen_Germany_Imperial-Cathedral-01.jpg/960px-Aachen_Germany_Imperial-Cathedral-01.jpg" alt="Aachen Cathedral" loading="lazy">
+  <div class="carr-label">Aachen Cathedral</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Schloss_Herrenchiemsee.jpg/960px-Schloss_Herrenchiemsee.jpg" alt="Herrenchiemsee" loading="lazy">
+  <div class="carr-label">Herrenchiemsee</div>
+</div>
+<div class="carr-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Festung_Ehrenbreitstein_Luftbild_080.jpg/960px-Festung_Ehrenbreitstein_Luftbild_080.jpg" alt="Ehrenbreitstein Fortress" loading="lazy">
+  <div class="carr-label">Ehrenbreitstein Fortress</div>
+</div>
+    </div>
+  </div>
+  <button class="carr-btn carr-next" onclick="carrMove(1)">&#8594;</button>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="val">Berlin</div><div class="lbl">Capital</div></div>
+  <div class="stat"><div class="val">83,491,249</div><div class="lbl">Population</div></div>
+  <div class="stat"><div class="val">euro (€)</div><div class="lbl">Currency</div></div>
+  <div class="stat"><div class="val">German</div><div class="lbl">Language</div></div>
+</div>
+
+<div class="currency-section">
+  <div class="currency-top">
+    <div class="currency-left">
+      <div class="time-btns">
+        <button class="tbtn" onclick="fetchHist('1W',this)">1W</button>
+        <button class="tbtn active" onclick="fetchHist('1M',this)">1M</button>
+        <button class="tbtn" onclick="fetchHist('3M',this)">3M</button>
+        <button class="tbtn" onclick="fetchHist('6M',this)">6M</button>
+        <button class="tbtn" onclick="fetchHist('1Y',this)">1Y</button>
+      </div>
+    </div>
+    <div class="cur-chart-wrap">
+      <canvas id="currencyChart"></canvas>
+    </div>
+  </div>
+  <div class="cur-converter">
+    <div class="conv-grp">
+      <span class="conv-lbl">Amount</span>
+      <div class="conv-row">
+        <input type="number" id="convAmt" value="1" min="0" oninput="doConvert()">
+        <select id="convFrom" onchange="doConvert()">
+          <option value="eur">euro</option>
+        </select>
+      </div>
+    </div>
+    <button class="swap-btn" onclick="doSwap()">⇌</button>
+    <div class="conv-grp">
+      <span class="conv-lbl">Converted</span>
+      <div class="conv-row">
+        <input type="number" id="convResult" readonly placeholder="—">
+        <select id="convTo" onchange="doConvert()">
+          <option value="usd">US Dollar</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="panel active" id="places"><div class="grid-6"><div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/960px-Taj_Mahal_%28Edited%29.jpeg" alt="Taj Mahal" loading="lazy">
+  <div class="card-body"><h3>Taj Mahal</h3><p class="card-country">📍 India</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Peru_Machu_Picchu_Sunrise.jpg/960px-Peru_Machu_Picchu_Sunrise.jpg" alt="Machu Picchu" loading="lazy">
+  <div class="card-body"><h3>Machu Picchu</h3><p class="card-country">📍 Peru</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Christ_the_Redeemer_-_Cristo_Redentor.jpg/960px-Christ_the_Redeemer_-_Cristo_Redentor.jpg" alt="Christ the Redeemer" loading="lazy">
+  <div class="card-body"><h3>Christ the Redeemer</h3><p class="card-country">📍 Brazil</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Schloss_Neuschwanstein_2013.jpg/960px-Schloss_Neuschwanstein_2013.jpg" alt="Neuschwanstein Castle" loading="lazy">
+  <div class="card-body"><h3>Neuschwanstein Castle</h3><p class="card-country">📍 Germany</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseo_2020.jpg/960px-Colosseo_2020.jpg" alt="Colosseum" loading="lazy">
+  <div class="card-body"><h3>Colosseum</h3><p class="card-country">📍 Italy</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Buddhist_monks_in_front_of_the_Angkor_Wat.jpg/960px-Buddhist_monks_in_front_of_the_Angkor_Wat.jpg" alt="Angkor Wat" loading="lazy">
+  <div class="card-body"><h3>Angkor Wat</h3><p class="card-country">📍 Cambodia</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/2011_Dimos_Thiras.png/960px-2011_Dimos_Thiras.png" alt="Santorini" loading="lazy">
+  <div class="card-body"><h3>Santorini</h3><p class="card-country">📍 Greece</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Al_Deir_Petra.JPG/960px-Al_Deir_Petra.JPG" alt="Petra" loading="lazy">
+  <div class="card-body"><h3>Petra</h3><p class="card-country">📍 Jordan</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_Great_Wall_of_China_at_Jinshanling-edit.jpg/960px-The_Great_Wall_of_China_at_Jinshanling-edit.jpg" alt="Great Wall of China" loading="lazy">
+  <div class="card-body"><h3>Great Wall of China</h3><p class="card-country">📍 China</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Cataratas_Victoria%2C_Zambia-Zimbabue%2C_2018-07-27%2C_DD_04.jpg/960px-Cataratas_Victoria%2C_Zambia-Zimbabue%2C_2018-07-27%2C_DD_04.jpg" alt="Victoria Falls" loading="lazy">
+  <div class="card-body"><h3>Victoria Falls</h3><p class="card-country">📍 Zimbabwe</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/SF_maig_2026.jpg/960px-SF_maig_2026.jpg" alt="Sagrada Família" loading="lazy">
+  <div class="card-body"><h3>Sagrada Família</h3><p class="card-country">📍 Spain</p></div>
+</div>
+<div class="card">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/1029_Acropolis_of_Athens_in_Greece_at_night_Photo_by_Giles_Laurent.jpg/960px-1029_Acropolis_of_Athens_in_Greece_at_night_Photo_by_Giles_Laurent.jpg" alt="Acropolis of Athens" loading="lazy">
+  <div class="card-body"><h3>Acropolis of Athens</h3><p class="card-country">📍 Greece</p></div>
+</div></div></div>
+  <div class="panel" id="food"><div class="food-list"><div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Heldrunger_Sauerbraten_2.JPG/960px-Heldrunger_Sauerbraten_2.JPG" alt="Sauerbraten" loading="lazy">
+  <div class="food-info">
+    <h3>Sauerbraten</h3>
+    <p>Sauerbraten (pronounced [ˈzaʊ̯ɐˌbʁaːtn̩] ) is a traditional German roast of heavily marinated meat. It is regarded as a national dish of Germany, and is frequently served in German-style restaurants i</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Breitenlesau_Krug_Br%C3%A4u_Schnitzel.JPG/960px-Breitenlesau_Krug_Br%C3%A4u_Schnitzel.JPG" alt="Schnitzel" loading="lazy">
+  <div class="food-info">
+    <h3>Schnitzel</h3>
+    <p>Schnitzel (German: [ˈʃnɪt͡sl̩] ) is a thin slice of meat. The meat is usually thinned by pounding with a meat tenderizer.</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Sp%C3%A4tzle-02.jpg/960px-Sp%C3%A4tzle-02.jpg" alt="Spätzle" loading="lazy">
+  <div class="food-info">
+    <h3>Spätzle</h3>
+    <p>Spätzle (German: [ˈʃpɛtslə] ), Spätzla or Spatzen, also called nokedli (Hungarian: [ˈnokɛdli]), are a type of Central European egg pasta typically served as a side for meat dishes with sauce. Commonly</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/54/00ane_Haxen.jpg" alt="Schweinshaxe" loading="lazy">
+  <div class="food-info">
+    <h3>Schweinshaxe</h3>
+    <p>Schweinshaxe (German pronunciation: [ˈʃvaɪnshaksə] ; literally 'swine's hock'), in German cuisine, is a roasted ham hock (or pork knuckle).  The ham hock is the end of the pig's leg, just above the an</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/German_Bratw%C3%BCrste.jpg" alt="Bratwurst" loading="lazy">
+  <div class="food-info">
+    <h3>Bratwurst</h3>
+    <p>Bratwurst (German: [ˈbʁaːtvʊʁst] ) is a type of German sausage made from pork or, less commonly, beef, veal, or any combination of beef, veal, and pork. The name is derived from the Old High German Br</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/20220430_currywurst.jpg/960px-20220430_currywurst.jpg" alt="Currywurst" loading="lazy">
+  <div class="food-info">
+    <h3>Currywurst</h3>
+    <p>Currywurst (German: [ˈkœʁiˌvʊɐ̯st] ) is a fast food dish of German origin consisting of sausage (usually pork) with curry ketchup. It was invented in 1949 by Herta Heuwer, who began selling it at a fo</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Leberk%C3%A4se-1.jpg/960px-Leberk%C3%A4se-1.jpg" alt="Leberkäse" loading="lazy">
+  <div class="food-info">
+    <h3>Leberkäse</h3>
+    <p>(German, literally 'liver-cheese'; also Leberkäs or Lebaka(a)s) in Austria and the Swabian, Bavarian and Franconian parts of Germany, 'leverkaas' in the Netherlands and Fleischkäse ("meat-cheese"; rar</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Maultaschensuppe.jpg/960px-Maultaschensuppe.jpg" alt="Maultasche" loading="lazy">
+  <div class="food-info">
+    <h3>Maultasche</h3>
+    <p>Maultaschen (German: [ˈmaʊ̯lˌtaʃn̩] ; singular Maultasche (), lit. 'mouth pockets') are large meat-filled dumplings in Swabian cuisine. They consist of sheets of pasta dough filled with minced meat, s</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Bread_rolls_at_a_bakery.jpg/960px-Bread_rolls_at_a_bakery.jpg" alt="Spargel" loading="lazy">
+  <div class="food-info">
+    <h3>Spargel</h3>
+    <p>Asparagus (Asparagus officinalis) or garden asparagus is a perennial flowering plant species in the genus Asparagus native to Eurasia. Widely cultivated as a vegetable crop, its young shoots are used </p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Lamb-stew.jpg/960px-Lamb-stew.jpg" alt="Eintopf" loading="lazy">
+  <div class="food-info">
+    <h3>Eintopf</h3>
+    <p>A stew is a combination of solid food ingredients that have been cooked in liquid and served in the resultant gravy. Ingredients can include any combination of vegetables and may include meat, especia</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Reibekuchen_mit_Apfelmus.jpg/960px-Reibekuchen_mit_Apfelmus.jpg" alt="Kartoffelpuffer" loading="lazy">
+  <div class="food-info">
+    <h3>Kartoffelpuffer</h3>
+    <p>Reibekuchen () are German potato pancakes, also known as Kartoffelpuffer (). They are common in many areas of Germany, the name "Reibekuchen" being characteristic to the Rheinland area.</p>
+  </div>
+</div>
+<div class="food-item">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Black_Forest_gateau.jpg/960px-Black_Forest_gateau.jpg" alt="Schwarzwälder Kirschtorte" loading="lazy">
+  <div class="food-info">
+    <h3>Schwarzwälder Kirschtorte</h3>
+    <p>Black Forest gateau, (German: Schwarzwälder Kirschtorte [ˈʃvaʁt͡svɛldɐ ˈkɪʁʃˌtɔʁtə] , lit. 'Black Forest cherry torte') or Black Forest cake, is a layer cake made out of cocoa powder, cherries, Kirsch</p>
+  </div>
+</div></div></div>
+  <div class="panel" id="weather"><div class="weather-list"><div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-0">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-0">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Berlin</div>
+    <div class="wc-desc" id="wdesc-0">Loading...</div>
+    <div class="wc-stats" id="wstats-0"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-0"></canvas></div>
+    <div class="wc-forecast" id="wforecast-0"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-1">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-1">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Munich</div>
+    <div class="wc-desc" id="wdesc-1">Loading...</div>
+    <div class="wc-stats" id="wstats-1"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-1"></canvas></div>
+    <div class="wc-forecast" id="wforecast-1"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-2">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-2">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Hamburg</div>
+    <div class="wc-desc" id="wdesc-2">Loading...</div>
+    <div class="wc-stats" id="wstats-2"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-2"></canvas></div>
+    <div class="wc-forecast" id="wforecast-2"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-3">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-3">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Cologne</div>
+    <div class="wc-desc" id="wdesc-3">Loading...</div>
+    <div class="wc-stats" id="wstats-3"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-3"></canvas></div>
+    <div class="wc-forecast" id="wforecast-3"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-4">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-4">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Frankfurt</div>
+    <div class="wc-desc" id="wdesc-4">Loading...</div>
+    <div class="wc-stats" id="wstats-4"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-4"></canvas></div>
+    <div class="wc-forecast" id="wforecast-4"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-5">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-5">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Dresden</div>
+    <div class="wc-desc" id="wdesc-5">Loading...</div>
+    <div class="wc-stats" id="wstats-5"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-5"></canvas></div>
+    <div class="wc-forecast" id="wforecast-5"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-6">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-6">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Leipzig</div>
+    <div class="wc-desc" id="wdesc-6">Loading...</div>
+    <div class="wc-stats" id="wstats-6"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-6"></canvas></div>
+    <div class="wc-forecast" id="wforecast-6"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-7">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-7">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Heidelberg</div>
+    <div class="wc-desc" id="wdesc-7">Loading...</div>
+    <div class="wc-stats" id="wstats-7"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-7"></canvas></div>
+    <div class="wc-forecast" id="wforecast-7"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-8">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-8">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Rothenburg ob der Tauber</div>
+    <div class="wc-desc" id="wdesc-8">Loading...</div>
+    <div class="wc-stats" id="wstats-8"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-8"></canvas></div>
+    <div class="wc-forecast" id="wforecast-8"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-9">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-9">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Potsdam</div>
+    <div class="wc-desc" id="wdesc-9">Loading...</div>
+    <div class="wc-stats" id="wstats-9"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-9"></canvas></div>
+    <div class="wc-forecast" id="wforecast-9"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-10">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-10">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Stuttgart</div>
+    <div class="wc-desc" id="wdesc-10">Loading...</div>
+    <div class="wc-stats" id="wstats-10"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-10"></canvas></div>
+    <div class="wc-forecast" id="wforecast-10"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-11">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-11">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Nuremberg</div>
+    <div class="wc-desc" id="wdesc-11">Loading...</div>
+    <div class="wc-stats" id="wstats-11"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-11"></canvas></div>
+    <div class="wc-forecast" id="wforecast-11"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-12">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-12">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Bremen</div>
+    <div class="wc-desc" id="wdesc-12">Loading...</div>
+    <div class="wc-stats" id="wstats-12"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-12"></canvas></div>
+    <div class="wc-forecast" id="wforecast-12"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-13">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-13">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Lübeck</div>
+    <div class="wc-desc" id="wdesc-13">Loading...</div>
+    <div class="wc-stats" id="wstats-13"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-13"></canvas></div>
+    <div class="wc-forecast" id="wforecast-13"></div>
+  </div>
+</div>
+<div class="wc-card">
+  <div class="wc-left-panel">
+    <span class="wc-emoji" id="wemoji-14">⏳</span>
+    <div class="wc-temprow">
+      <span class="wc-temp" id="wtemp-14">—</span>
+      <span class="wc-unit">°C</span>
+    </div>
+  </div>
+  <div class="wc-right-panel">
+    <div class="wc-city">Düsseldorf</div>
+    <div class="wc-desc" id="wdesc-14">Loading...</div>
+    <div class="wc-stats" id="wstats-14"></div>
+    <div class="wc-chart-wrap"><canvas id="wchart-14"></canvas></div>
+    <div class="wc-forecast" id="wforecast-14"></div>
+  </div>
+</div></div></div>
+  <div class="panel" id="map"><div id="leaflet-map" class="map-container"></div></div>
+</div>
+
+<script>
+// 3-up carousel
+const track=document.getElementById('carTrack');
+let carrPos=0;
+function carrMove(dir){
+  const items=track.children;
+  const total=items.length;
+  const visible=3;
+  const maxPos=total-visible;
+  carrPos=Math.max(0,Math.min(maxPos,carrPos+dir));
+  const itemW=items[0].offsetWidth+12;
+  track.style.transform=`translateX(-${carrPos*itemW}px)`;
+}
+// Tabs
+function show(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  if(id==='map')setTimeout(function(){_initTgMap();if(_tgMap)_tgMap.invalidateSize();},60);
+}
+// Map — Leaflet.js
+var _tgMap=null;
+function _initTgMap(){
+  if(_tgMap)return;
+  _tgMap=L.map('leaflet-map',{zoomControl:true,attributionControl:true}).setView([51.0,9.0],5);
+  var voyager=L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank">CARTO</a>',
+    subdomains:'abcd',maxZoom:20
+  });
+  var osmLayer=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+    maxZoom:19
+  });
+  var satellite=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{
+    attribution:'Tiles &copy; Esri &mdash; Esri, Maxar, GeoEye, Earthstar Geographics',
+    maxZoom:19
+  });
+  var labelsOverlay=L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png',{
+    subdomains:'abcd',maxZoom:20,opacity:0.9,
+    attribution:''
+  });
+  voyager.addTo(_tgMap);
+  var baseMaps={'🗺️ Street (Voyager)':voyager,'🗺️ OpenStreetMap':osmLayer,'🛰️ Satellite':satellite};
+  var overlays={'🏷️ Labels (satellite)':labelsOverlay};
+  L.control.layers(baseMaps,overlays,{position:'topright',collapsed:false}).addTo(_tgMap);
+  L.control.scale({imperial:false,position:'bottomleft'}).addTo(_tgMap);
+  // Country boundary from Nominatim
+  fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent("Germany")+'&limit=1&polygon_geojson=1&format=json')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data&&data[0]&&data[0].geojson){
+        L.geoJSON(data[0].geojson,{
+          style:{color:'#60a5fa',weight:2.5,opacity:0.85,fillColor:'#3b82f6',fillOpacity:0.07}
+        }).addTo(_tgMap);
+      }
+    })
+    .catch(function(){});
+  // City markers
+  var _mc=[{"city": "Berlin", "lat": 52.5244, "lng": 13.4105}, {"city": "Munich", "lat": 48.1374, "lng": 11.5755}, {"city": "Hamburg", "lat": 53.5507, "lng": 9.993}, {"city": "Cologne", "lat": 50.9333, "lng": 6.95}, {"city": "Frankfurt", "lat": 50.1155, "lng": 8.6842}, {"city": "Dresden", "lat": 51.0509, "lng": 13.7383}, {"city": "Leipzig", "lat": 51.3396, "lng": 12.3713}, {"city": "Heidelberg", "lat": 49.4077, "lng": 8.6908}, {"city": "Rothenburg ob der Tauber", "lat": 49.3788, "lng": 10.1871}, {"city": "Potsdam", "lat": 52.3989, "lng": 13.0657}, {"city": "Stuttgart", "lat": 48.7823, "lng": 9.177}, {"city": "Nuremberg", "lat": 49.4542, "lng": 11.0775}, {"city": "Bremen", "lat": 53.0758, "lng": 8.8072}, {"city": "L\u00fcbeck", "lat": 53.8689, "lng": 10.6873}, {"city": "D\u00fcsseldorf", "lat": 51.2232, "lng": 6.7793}];
+  _mc.forEach(function(c){
+    var popup='<div style="font-family:-apple-system,sans-serif;padding:4px 2px;min-width:100px">'+
+      '<b style="font-size:.95rem;color:#0f172a">📍 '+c.city+'</b></div>';
+    L.circleMarker([c.lat,c.lng],{
+      radius:9,fillColor:'#60a5fa',color:'#1d4ed8',weight:2.5,opacity:1,fillOpacity:0.9
+    }).addTo(_tgMap).bindPopup(popup);
+  });
+  // Country centre label
+  L.marker([51.0,9.0],{
+    icon:L.divIcon({
+      className:'',
+      html:'<div style="background:rgba(15,23,42,.88);color:#e2e8f0;padding:5px 11px;border-radius:8px;border:1.5px solid #60a5fa;font-weight:700;font-size:.82rem;white-space:nowrap;box-shadow:0 3px 12px rgba(0,0,0,.5)">'+"Germany"+'</div>',
+      iconAnchor:[50,14]
+    })
+  }).addTo(_tgMap);
+}
+// Currency Dashboard — fawazahmed0 API (150+ currencies)
+var _CC='eur',_curChart=null,_fromC=null,_toC=null;
+var _FAWAZ='https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@';
+var _cOpts={searchEnabled:true,searchPlaceholderValue:'Type to search...',itemSelectText:'',shouldSort:false,searchResultLimit:30};
+function _loadCurrencies(){
+  fetch(_FAWAZ+'latest/v1/currencies.json')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var codes=Object.keys(data).filter(function(c){return /^[a-z]{3}$/.test(c);}).sort();
+      var arr=codes.map(function(c){return {value:c,label:c.toUpperCase()+' — '+data[c]};});
+      if(_fromC){_fromC.destroy();_fromC=null;}
+      if(_toC){_toC.destroy();_toC=null;}
+      _fromC=new Choices(document.getElementById('convFrom'),Object.assign({},_cOpts));
+      _fromC.setChoices(arr,'value','label',true);
+      _fromC.setChoiceByValue(_CC==='usd'?'eur':_CC);
+      _toC=new Choices(document.getElementById('convTo'),Object.assign({},_cOpts));
+      _toC.setChoices(arr,'value','label',true);
+      _toC.setChoiceByValue('usd');
+      doConvert();
+    })
+    .catch(function(){});
+}
+function _initCur(){
+  _loadCurrencies();
+  fetchHist('1M',document.querySelector('.tbtn.active'));
+}
+function fetchHist(period,btn){
+  document.querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  var today=new Date(),start=new Date(today),step;
+  if(period==='1W'){start.setDate(today.getDate()-7);step=1;}
+  else if(period==='1M'){start.setMonth(today.getMonth()-1);step=7;}
+  else if(period==='3M'){start.setMonth(today.getMonth()-3);step=14;}
+  else if(period==='6M'){start.setMonth(today.getMonth()-6);step=21;}
+  else{start.setFullYear(today.getFullYear()-1);step=30;}
+  function fmtD(x){return x.toISOString().split('T')[0];}
+  var dates=[],c=new Date(start);
+  while(c<=today){dates.push(fmtD(c));c.setDate(c.getDate()+step);}
+  if(dates[dates.length-1]!==fmtD(today))dates.push(fmtD(today));
+  var fc=_CC==='usd'?'eur':_CC;
+  Promise.all(dates.map(function(dt){
+    return fetch(_FAWAZ+dt+'/v1/currencies/'+fc+'.json')
+      .then(function(r){return r.json();})
+      .then(function(d){return {dt:dt,v:(d[fc]&&d[fc]['usd'])||null};})
+      .catch(function(){return {dt:dt,v:null};});
+  })).then(function(res){
+    var ok=res.filter(function(x){return x.v!==null;});
+    _renderCurChart(ok.map(function(x){return x.dt;}),ok.map(function(x){return x.v;}));
+  });
+}
+function _renderCurChart(labels,data){
+  var ctx=document.getElementById('currencyChart').getContext('2d');
+  if(_curChart)_curChart.destroy();
+  var up=data[data.length-1]>=data[0],col=up?'#34d399':'#f87171';
+  _curChart=new Chart(ctx,{
+    type:'line',
+    data:{labels:labels,datasets:[{data:data,borderColor:col,
+      backgroundColor:up?'rgba(52,211,153,0.12)':'rgba(248,113,113,0.12)',
+      borderWidth:2,pointRadius:0,fill:true,tension:0.4}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{mode:'index',intersect:false,callbacks:{label:function(c){return c.parsed.y.toFixed(6)+' USD';}}}
+      },
+      scales:{
+        x:{ticks:{color:'#64748b',maxTicksLimit:6,font:{size:10}},grid:{color:'rgba(51,65,85,0.5)'}},
+        y:{ticks:{color:'#64748b',font:{size:10}},grid:{color:'rgba(51,65,85,0.5)'}}
+      }
+    }
+  });
+}
+function doConvert(){
+  var amt=parseFloat(document.getElementById('convAmt').value)||0;
+  var from=document.getElementById('convFrom').value.toLowerCase();
+  var to=document.getElementById('convTo').value.toLowerCase();
+  if(from===to){document.getElementById('convResult').value=amt.toFixed(4);return;}
+  fetch(_FAWAZ+'latest/v1/currencies/'+from+'.json')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var rate=d[from]&&d[from][to];
+      if(rate)document.getElementById('convResult').value=(amt*rate).toFixed(4);
+    })
+    .catch(function(){});
+}
+function doSwap(){
+  if(!_fromC||!_toC)return;
+  var tmp=document.getElementById('convFrom').value;
+  _fromC.setChoiceByValue(document.getElementById('convTo').value);
+  _toC.setChoiceByValue(tmp);
+  doConvert();
+}
+_initCur();
+// Weather
+var _WCITIES=[{"city": "Berlin", "lat": 52.5244, "lng": 13.4105}, {"city": "Munich", "lat": 48.1374, "lng": 11.5755}, {"city": "Hamburg", "lat": 53.5507, "lng": 9.993}, {"city": "Cologne", "lat": 50.9333, "lng": 6.95}, {"city": "Frankfurt", "lat": 50.1155, "lng": 8.6842}, {"city": "Dresden", "lat": 51.0509, "lng": 13.7383}, {"city": "Leipzig", "lat": 51.3396, "lng": 12.3713}, {"city": "Heidelberg", "lat": 49.4077, "lng": 8.6908}, {"city": "Rothenburg ob der Tauber", "lat": 49.3788, "lng": 10.1871}, {"city": "Potsdam", "lat": 52.3989, "lng": 13.0657}, {"city": "Stuttgart", "lat": 48.7823, "lng": 9.177}, {"city": "Nuremberg", "lat": 49.4542, "lng": 11.0775}, {"city": "Bremen", "lat": 53.0758, "lng": 8.8072}, {"city": "L\u00fcbeck", "lat": 53.8689, "lng": 10.6873}, {"city": "D\u00fcsseldorf", "lat": 51.2232, "lng": 6.7793}];
+var _wcCharts={};
+function _wEmoji(c){
+  if(c===0)return'☀️';if(c<=2)return'🌤️';if(c<=3)return'⛅';
+  if(c<=48)return'🌫️';if(c<=57)return'🌦️';if(c<=67)return'🌧️';
+  if(c<=77)return'❄️';if(c<=82)return'🌦️';return'⛈️';
+}
+function _wDesc(c){
+  if(c===0)return'Clear sky';if(c===1)return'Mainly clear';if(c===2)return'Partly cloudy';
+  if(c===3)return'Overcast';if(c<=48)return'Foggy';if(c<=57)return'Drizzle';
+  if(c<=67)return'Rainy';if(c<=77)return'Snowy';if(c<=82)return'Showers';return'Thunderstorm';
+}
+function _renderWCard(i,d){
+  var cur=d.current,daily=d.daily,hourly=d.hourly;
+  document.getElementById('wemoji-'+i).textContent=_wEmoji(cur.weathercode);
+  document.getElementById('wtemp-'+i).textContent=Math.round(cur.temperature_2m);
+  document.getElementById('wdesc-'+i).textContent=_wDesc(cur.weathercode);
+  document.getElementById('wstats-'+i).innerHTML=
+    '💧 '+cur.relative_humidity_2m+'% &nbsp;💨 '+Math.round(cur.windspeed_10m)+' km/h &nbsp;🌧 '+cur.precipitation+'mm';
+  var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],fhtml='';
+  for(var j=0;j<Math.min(7,daily.time.length);j++){
+    var dt=new Date(daily.time[j]+'T12:00:00');
+    fhtml+='<div class="wc-day"><div class="wc-day-name">'+days[dt.getDay()]+'</div>'+
+      '<div class="wc-day-icon">'+_wEmoji(daily.weathercode[j])+'</div>'+
+      '<div class="wc-day-hi">'+Math.round(daily.temperature_2m_max[j])+'°</div>'+
+      '<div class="wc-day-lo">'+Math.round(daily.temperature_2m_min[j])+'°</div></div>';
+  }
+  document.getElementById('wforecast-'+i).innerHTML=fhtml;
+  var now=new Date(),nowH=now.getHours();
+  var hLabels=hourly.time.slice(nowH,nowH+24).map(function(t){return t.split('T')[1].slice(0,5);});
+  var hTemps=hourly.temperature_2m.slice(nowH,nowH+24);
+  var ctx=document.getElementById('wchart-'+i).getContext('2d');
+  if(_wcCharts[i])_wcCharts[i].destroy();
+  _wcCharts[i]=new Chart(ctx,{
+    type:'line',
+    data:{labels:hLabels,datasets:[{data:hTemps,borderColor:'#f59e0b',
+      backgroundColor:'rgba(245,158,11,0.15)',borderWidth:2,pointRadius:0,fill:true,tension:0.4}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toFixed(1)+'°C';}}}},
+      scales:{
+        x:{ticks:{color:'#64748b',maxTicksLimit:6,font:{size:9}},grid:{display:false}},
+        y:{ticks:{color:'#64748b',font:{size:9},callback:function(v){return v+'°';}},grid:{color:'rgba(51,65,85,0.4)'}}
+      }
+    }
+  });
+}
+(function(){
+  if(!_WCITIES.length)return;
+  var baseUrl='https://api.open-meteo.com/v1/forecast?current=temperature_2m,relative_humidity_2m,precipitation,weathercode,windspeed_10m&hourly=temperature_2m&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=7&wind_speed_unit=kmh';
+  Promise.all(_WCITIES.map(function(c,i){
+    return fetch(baseUrl+'&latitude='+c.lat+'&longitude='+c.lng)
+      .then(function(r){return r.json();})
+      .then(function(d){_renderWCard(i,d);})
+      .catch(function(){document.getElementById('wdesc-'+i).textContent='Unavailable';});
+  }));
+})();
+</script>
+</body>
+</html>
