@@ -1,0 +1,14 @@
+# Environment
+.env
+
+# Generated files
+travel_guide.html
+data/countries.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
